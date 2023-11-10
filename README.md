@@ -1,9 +1,9 @@
 # LearningManagementSystem
-Project will contain majorly three Modules.
+#Project will contain majorly three Modules.
   Employee
   Mentor
   Admin
-Security is integrated to APIs by using Spring Security.
+#Security is integrated to APIs by using Spring Security.
 APIs are secured you can access only with proper access.
 Registration and Login are open APIs (not secured), you will find in seperate class called AppUser Controller.
 Followed Three layered Architecture ,you will find 
