@@ -1,0 +1,31 @@
+package com.te.lmsp.service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.BatchMentorDTO;
+import com.te.lmsp.dto.EmpAttendenceDTO;
+import com.te.lmsp.dto.EmployeeDTO;
+import com.te.lmsp.dto.MentorEmpDetailsDTO;
+import com.te.lmsp.dto.MockSheduleDTO;
+import com.te.lmsp.exception.DuplicateMockException;
+
+public interface MentorService {
+
+	BatchMentorDTO getBatchDetails(String batchId);
+
+	List<BatchDTO> getBatchList();
+
+	List<EmpAttendenceDTO> getEmployees(String batchId);
+
+	String morningAttendence(boolean status, String empId,LocalDate date);
+	
+	String noonAttendence(boolean status, String empId,LocalDate date);
+
+	List<MentorEmpDetailsDTO> getEmployee(String batchId);
+
+	String registerMock(MockSheduleDTO mockSheduleDTO) throws DuplicateMockException;
+
+
+}

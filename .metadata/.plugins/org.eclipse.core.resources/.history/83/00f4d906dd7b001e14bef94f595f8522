@@ -1,0 +1,20 @@
+package com.te.lmsp.util;
+
+import org.springframework.stereotype.Component;
+
+import com.te.lmsp.dto.MentorDTO;
+import com.te.lmsp.dto.SkillDTO;
+import com.te.lmsp.entity.Mentor;
+import com.te.lmsp.entity.Skill;
+@Component
+public class MentorUtils {
+	public Mentor dtoToMentor(MentorDTO mentorDTO) {
+		return Mentor.builder()
+				.mentorId(mentorDTO.getEmployeeId())
+					.mentorName(mentorDTO.getMentorName())
+					.email(mentorDTO.getEmail())
+					.lastLogin(mentorDTO.getLastLogin())
+					.build();
+	}
+	
+}

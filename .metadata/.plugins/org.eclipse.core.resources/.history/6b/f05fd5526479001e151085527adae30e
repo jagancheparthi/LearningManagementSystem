@@ -1,0 +1,9 @@
+package com.te.lmsp.service;
+
+import com.te.lmsp.dto.BatchDTO;
+
+public interface AdminService {
+
+	String registerBatch(BatchDTO batchDTO);
+
+}

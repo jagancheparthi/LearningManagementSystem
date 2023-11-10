@@ -1,0 +1,75 @@
+package com.te.lmsp.entity;
+
+import java.time.LocalDate;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.te.lmsp.enums.BatchStatus;
+import com.te.lmsp.enums.BatchStrength;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@Entity
+
+public class Batch {
+	@Id
+	@Column(name="batch_id")
+	private String batchId;
+	
+	@Column(name="batch_name")
+	private String batchName;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="bat_start_date")
+	private LocalDate batStartDate;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="bat_end_date")
+	private LocalDate batEndDate;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private Set<Skill> technologies;
+	
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable
+	private Map<BatchStrength, Integer> batchStrength ;
+//	= new EnumMap<>(BatchStrength.class);
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Mentor mentor;
+	
+	@Enumerated(EnumType.STRING)
+	private BatchStatus batchStatus;
+
+	@OneToMany(mappedBy="batch",cascade = CascadeType.ALL)
+	private List<Employee> employees;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<MockShedule> schedules;
+	
+}

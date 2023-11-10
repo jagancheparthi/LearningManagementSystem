@@ -1,0 +1,5 @@
+package com.te.lmsp.enums;
+
+public enum RequestStatus {
+
+}

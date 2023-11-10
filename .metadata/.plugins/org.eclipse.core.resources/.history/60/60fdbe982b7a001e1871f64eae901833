@@ -1,0 +1,53 @@
+package com.te.lmsp.controller;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.lmsp.dto.EmployeeDTO;
+import com.te.lmsp.exception.UserNotFoundException;
+import com.te.lmsp.response.SuccessResponse;
+import com.te.lmsp.service.EmployeeService;
+
+import lombok.RequiredArgsConstructor;
+@RequestMapping(path = "/employee")
+@RequiredArgsConstructor
+@RestController
+public class EmployeeController {
+	private final EmployeeService employeeService;
+
+	@GetMapping(path = "/employee")
+	public ResponseEntity<SuccessResponse> findEmployee(@RequestParam("id") String empId) throws UserNotFoundException {
+		 EmployeeDTO empDTO=employeeService.findEmployee(empId);
+		 return new ResponseEntity<SuccessResponse>(SuccessResponse.builder()
+				 													.data(empDTO)
+				 													.timeStamp(new Timestamp(System.currentTimeMillis()))
+				 													.message("DATA FOUND")
+				 													.build(), HttpStatus.FOUND);
+	}
+	@GetMapping(path = "/employees")
+	public ResponseEntity<SuccessResponse> findEmployees() {
+		System.out.println("this is employees  "+01);
+		 List<EmployeeDTO> empsDTO=employeeService.findEmployees();
+		 System.out.println("this is employees  "+02);
+		 return new ResponseEntity<SuccessResponse>(SuccessResponse.builder()
+				 													.data(empsDTO)
+				 													.timeStamp(new Timestamp(System.currentTimeMillis()))
+				 													.message("NO OF RECORDS FOUND IS "+empsDTO.size())
+				 													.build(), HttpStatus.FOUND);
+	}
+	@PostMapping(path = "/requests")
+	public String sendRequest(@RequestParam("id") String empId) throws UserNotFoundException {
+		String msg=employeeService.sendRequest(empId);
+		return msg;
+	}
+	
+	
+}

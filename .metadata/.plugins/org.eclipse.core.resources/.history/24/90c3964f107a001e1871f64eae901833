@@ -1,0 +1,9 @@
+package com.te.lmsp.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.te.lmsp.entity.RequestData;
+
+public interface RequestDataRepository extends JpaRepository<RequestData, String>{
+
+}

@@ -1,0 +1,5 @@
+package com.te.lmsp.config;
+
+public class LoggingConfig {
+
+}

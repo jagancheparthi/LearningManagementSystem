@@ -1,0 +1,65 @@
+package com.te.lmsp.controller;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.BatchMentorDTO;
+import com.te.lmsp.dto.EmpAttendenceDTO;
+import com.te.lmsp.dto.EmployeeDTO;
+import com.te.lmsp.entity.Employee;
+import com.te.lmsp.service.MentorService;
+
+import lombok.RequiredArgsConstructor;
+@RequestMapping(path = "/mentor")
+@RequiredArgsConstructor
+@RestController
+public class MentorController {
+	
+	private final MentorService mentorService;
+	@GetMapping(path = "/batch")
+	public BatchMentorDTO getBatchDetails(@RequestParam("id") String batchId) {
+		BatchMentorDTO batMenDto=mentorService.getBatchDetails(batchId);
+		return batMenDto;
+	}
+	@GetMapping(path = "/batchlist")
+	public List<BatchDTO> getBatchList() {
+		List<BatchDTO> batches=mentorService.getBatchList();
+		return batches;
+	}
+	@GetMapping(path = "/employees")
+	public List<EmpAttendenceDTO> getEmployees(@RequestParam("id") String batchId) {
+		List<EmpAttendenceDTO> employees=mentorService.getEmployees(batchId);
+		return employees;
+	}
+	@PutMapping(path = "/present")
+	public void morningAttendence(@RequestParam boolean status,@RequestParam String empId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		
+		String message=mentorService.morningAttendence(status,empId,date);
+	}
+	
+	@GetMapping(path = "/mock")
+	public void getMockRatings(int empId) {
+		
+	}
+	@PostMapping(path = "addmock")
+	public void addMock() {
+		
+	}
+	@PostMapping(path = "addrating")
+	public void addRating() {
+		
+	}
+	@PostMapping(path = "addattendence")
+	public void addAttendence() {
+		
+	}
+}

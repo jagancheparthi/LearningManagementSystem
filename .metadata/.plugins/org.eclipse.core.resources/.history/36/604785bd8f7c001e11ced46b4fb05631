@@ -1,0 +1,49 @@
+package com.te.lmsp.config;
+
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import com.te.lmsp.service.MentorService;
+
+import lombok.RequiredArgsConstructor;
+@Configuration
+@EnableCaching
+@EnableScheduling
+@RequiredArgsConstructor
+public class CacheConfig {
+	
+	private final CacheManager cacheManager;
+	
+//	private final MentorService mentorService;
+	
+	/* This preLoadCache() giving some exceptions ,we have to work */
+	
+//	@PostConstruct
+//	public void preLoadCache() {
+//		Cache cache = cacheManager.getCache("applicationcache");
+//		List<BatchMentorListDTO> batchList = mentorService.getBatchList();
+//		for (BatchMentorListDTO batchMentorListDTO : batchList) {
+//			cache.put(batchMentorListDTO.getBatchId(), batchMentorListDTO);
+//			System.out.println(batchMentorListDTO);
+//		}
+//	}
+	
+	
+	
+	@Scheduled(fixedRate = 15000,initialDelay = 15000)
+	public void clearCache() {
+		System.out.println("clearing cache.....");
+		cacheManager.getCacheNames().parallelStream().forEach(name->cacheManager.getCache(name).clear());
+	}
+	
+	/*
+	 * TO CLEAR THE CACHE WE WILL USE THIS clearCache() METHOD,HERE
+	 * 
+	 * fixedRate->15000----->will represent 15 seconds of time
+	 * initialdelay->15000---->will represent 15 seconds of time AFTER 15 SECONDS
+	 * CACHE DATA IS DELETED.....
+	 */
+}

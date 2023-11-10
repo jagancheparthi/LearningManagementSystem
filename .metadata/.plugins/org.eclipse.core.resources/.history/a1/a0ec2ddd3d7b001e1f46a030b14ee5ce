@@ -1,0 +1,53 @@
+package com.te.lmsp.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.BatchMentorDTO;
+import com.te.lmsp.entity.Employee;
+import com.te.lmsp.service.MentorService;
+
+import lombok.RequiredArgsConstructor;
+@RequestMapping(path = "/mentor")
+@RequiredArgsConstructor
+@RestController
+public class MentorController {
+	
+	private final MentorService mentorService;
+	@GetMapping(path = "/batch")
+	public BatchMentorDTO getBatchDetails(@RequestParam("id") String batchId) {
+		BatchMentorDTO batMenDto=mentorService.getBatchDetails(batchId);
+		return batMenDto;
+	}
+	@GetMapping(path = "/batchlist")
+	public List<BatchDTO> getBatchList() {
+		List<BatchDTO> batches=mentorService.getBatchList();
+		return batches;
+	}
+	@GetMapping(path = "/employees")
+	public List<Employee> getEmployees(int batchId) {
+		return List.of();
+	}
+	@GetMapping(path = "/mock")
+	public void getMockRatings(int empId) {
+		
+	}
+	@PostMapping(path = "addmock")
+	public void addMock() {
+		
+	}
+	@PostMapping(path = "addrating")
+	public void addRating() {
+		
+	}
+	@PostMapping(path = "addattendence")
+	public void addAttendence() {
+		
+	}
+}

@@ -1,0 +1,74 @@
+package com.te.lmsp.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.MentorDTO;
+import com.te.lmsp.dto.RequestDataDTO;
+import com.te.lmsp.exception.BatchNotFoundException;
+import com.te.lmsp.service.AdminService;
+
+import lombok.RequiredArgsConstructor;
+@RequiredArgsConstructor
+@RequestMapping(path = "/admin")
+@RestController
+public class AdminController {
+	Logger log=LoggerFactory.getLogger(AdminController.class);
+	private final AdminService adminService;
+	
+	@GetMapping(path = "/batchlist")
+	public List<BatchDTO> getBatchList() {
+		List<BatchDTO> batches=adminService.getBatchList();
+		return batches;
+	}
+	
+	@PostMapping(path = "/register")
+	public String registerBatch(@RequestBody BatchDTO batchDTO) {
+		log.info("register is started");
+		String batchId=adminService.registerBatch(batchDTO);
+		log.info("register completed");
+		return batchId;
+	}
+	
+	@GetMapping(path = "/requestlist")
+	public List<RequestDataDTO> showRequestList() {
+		List<RequestDataDTO> data=adminService.getRequestList();
+		return data;
+	}
+	@GetMapping(path = "/mentorlist")
+	public List<MentorDTO> mentorList() {
+		List<MentorDTO> mentors=adminService.getMentorsList();
+		return mentors;
+	}
+	@PostMapping(path = "registermentor")
+	public String registerMentor(@RequestBody MentorDTO mentorDTO) {
+		String mentorId=adminService.registerMentor(mentorDTO);
+		return mentorId+"--INSERTED SUCCESSFULLY";
+	}
+	@PutMapping(path = "/status")
+	public String changeStatus(@RequestParam("id") String batchId,@RequestBody BatchDTO batchDTO) throws BatchNotFoundException {
+		String batchI=adminService.updateBatchStatus(batchId,batchDTO);
+		return batchI;
+	}
+	@DeleteMapping(path = "/accept")
+	public String accept(@RequestParam("id") String employeeId) {
+		String msg=adminService.acceptRequest(employeeId);
+		return msg;
+	}
+	@PutMapping(path = "/reject")
+	public void reject(@RequestParam("id") String employeeId,@RequestBody String reason) {
+		String msg=adminService.rejectEmployee(employeeId);
+	}
+	
+}

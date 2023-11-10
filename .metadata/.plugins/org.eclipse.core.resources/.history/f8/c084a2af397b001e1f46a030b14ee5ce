@@ -1,0 +1,62 @@
+package com.te.lmsp.dto;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.te.lmsp.entity.Skill;
+import com.te.lmsp.enums.BatchStatus;
+import com.te.lmsp.enums.BatchStrength;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
+public class BatchDTO {
+	@NotBlank(message = "batchId should not be Blank")
+	@NotNull(message = "batchId should not be null")
+	private String batchId;
+	
+	@NotBlank(message = "batchName should not be Blank")
+	@NotNull(message = "batchName should not be null")
+	private String batchName;
+	
+	@NotBlank(message = "batStartDate should not be Blank")
+	@NotNull(message = "batStartDate should not be null")
+	private LocalDate batStartDate;
+
+	@NotBlank(message = "batEndDate should not be Blank")
+	@NotNull(message = "batEndDate should not be null")
+	private LocalDate batEndDate;
+	
+	@NotBlank(message = "technologies should not be Blank")
+	@NotNull(message = "technologies should not be null")
+	private Set<SkillDTO> technologies;
+	
+//	@NotNull(message = "batchStrength should not be null")
+	private Map<BatchStrength, Integer> batchStrength = new EnumMap<>(BatchStrength.class);
+	
+	@NotNull(message = " mentor should not be null")
+	private String mentorName;
+	
+	@Enumerated(EnumType.STRING)
+	private BatchStatus batchStatus;
+
+//	@NotNull(message = "batchStrength should not be null")
+	private List<EmployeeDTO> employees;
+}

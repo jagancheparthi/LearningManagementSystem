@@ -1,0 +1,40 @@
+package com.te.lmsp.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.service.AdminService;
+
+import lombok.RequiredArgsConstructor;
+@RequiredArgsConstructor
+@RequestMapping(path = "/admin")
+@RestController
+public class AdminController {
+	private final AdminService adminService;
+	@GetMapping(path = "/batchlist")
+	public void getBatchList() {
+		
+	}
+	
+	@PostMapping(path = "/register")
+	public void registerBatch(@RequestBody BatchDTO batchDTO) {
+		
+	}
+	
+	@GetMapping(path = "/requestlist")
+	public void showRequestList() {
+		
+	}
+	@GetMapping(path = "/mentorlist")
+	public void mentorList() {
+		
+	}
+	@PostMapping(path = "registermentor")
+	public void registerMentor() {
+		
+	}
+}

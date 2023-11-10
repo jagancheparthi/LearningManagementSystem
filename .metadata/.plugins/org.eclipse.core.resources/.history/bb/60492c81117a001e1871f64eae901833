@@ -1,0 +1,149 @@
+package com.te.lmsp.service.implementation;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.MentorDTO;
+import com.te.lmsp.dto.RequestDataDTO;
+import com.te.lmsp.dto.SkillDTO;
+import com.te.lmsp.entity.Batch;
+import com.te.lmsp.entity.Contact;
+import com.te.lmsp.entity.EmployeeEducationalDetails;
+import com.te.lmsp.entity.Mentor;
+import com.te.lmsp.entity.RequestData;
+import com.te.lmsp.entity.Skill;
+import com.te.lmsp.enums.YearsOfExperience;
+import com.te.lmsp.exception.BatchNotFoundException;
+import com.te.lmsp.repository.BatchRepository;
+import com.te.lmsp.repository.MentorRepository;
+import com.te.lmsp.repository.RequestDataRepository;
+import com.te.lmsp.repository.SkillRepository;
+import com.te.lmsp.service.AdminService;
+import com.te.lmsp.util.BatchUtils;
+import com.te.lmsp.util.MentorUtils;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Service
+public class AdminServiceImpl implements AdminService {
+
+	private final MentorUtils mentorUtils;
+	private final BatchRepository batchRepository;
+	private final MentorRepository mentorRepository;
+	private final SkillRepository skillRepository;
+	private final BatchUtils batchUtils;
+	private final RequestDataRepository requestDataRepository;
+
+	@Override
+	public String registerMentor(MentorDTO mentorDTO) {
+		Mentor mentor = mentorUtils.dtoToMentor(mentorDTO);
+		Set<Skill> skills = mentorDTO.getSkills().stream().map(sk -> batchUtils.dtoToSkill(sk))
+				.collect(Collectors.toSet());
+		Set<Skill> set = new HashSet<>();
+		for (Skill skill : skills) {
+			Skill skil = skillRepository.findBySkillName(skill.getSkillName());
+			if (skil != null)
+				set.add(skil);
+			else
+				set.add(skill);
+		}
+		mentor.setSkills(set);
+		Mentor men = mentorRepository.save(mentor);
+		return men.getMentorId();
+	}
+
+	@Override
+	public String registerBatch(BatchDTO batchDTO) {
+		System.out.println(batchDTO);
+		Batch batch = new Batch();
+		BeanUtils.copyProperties(batchDTO, batch);
+		Set<Skill> set = new HashSet<>();
+		Set<Skill> skills = batchDTO.getTechnologies().stream().map(sk -> batchUtils.dtoToSkill(sk))
+				.collect(Collectors.toSet());
+		for (Skill skill : skills) {
+			System.out.println(skill.getSkillName());
+			Skill skil = skillRepository.findById(skill.getSkillName()).orElse(null);
+			set.add(skil);
+		}
+		Mentor ment = mentorRepository.findByMentorName(batchDTO.getMentorName());
+		batch.setMentor(ment);
+		batch.setTechnologies(set);
+		Batch batchS = batchRepository.save(batch);
+		return batchS.getBatchId() + " is Saved Successfully....";
+	}
+
+	@Override
+	public List<BatchDTO> getBatchList() {
+		List<Batch> batches = batchRepository.findAll();
+		return batches.stream().map(batch -> {
+			BatchDTO dto = new BatchDTO();
+			BeanUtils.copyProperties(batch, dto);
+			dto.setMentorName(batch.getMentor().getMentorName());
+			Set<SkillDTO> skills = batch.getTechnologies().stream().map(tech -> batchUtils.skillToDto(tech))
+					.collect(Collectors.toSet());
+			dto.setTechnologies(skills);
+			return dto;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public String updateBatchStatus(String batchId, BatchDTO batchDTO) throws BatchNotFoundException {
+		Batch batch = batchRepository.findById(batchId)
+				.orElseThrow(() -> new BatchNotFoundException("THERE IS NO BATCH WITH GIVEN BATCHID"));
+		batch.setBatchStatus(batchDTO.getBatchStatus());
+		Batch bat = batchRepository.save(batch);
+		return bat.getBatchId() + "UPDATED SUCCESSFULLY";
+	}
+
+	@Override
+	public List<MentorDTO> getMentorsList() {
+		List<Mentor> mentors = mentorRepository.findAll();
+		return mentors.stream().map(mentor -> {
+			MentorDTO dto = new MentorDTO();
+			BeanUtils.copyProperties(mentor, dto);
+			Set<SkillDTO> skills = mentor.getSkills().stream().map(skill -> batchUtils.skillToDto(skill))
+					.collect(Collectors.toSet());
+			dto.setSkills(skills);
+			return dto;
+		}).collect(Collectors.toList());
+
+	}
+
+	/* IN COMPLETED */
+	@Override
+	public List<RequestDataDTO> getRequestList() {
+		
+		List<RequestData> reqData = requestDataRepository.findAll();
+		return reqData.stream().map(req->{
+			RequestDataDTO dto=new RequestDataDTO();
+			dto.setEmpId(req.getEmployee().getEmpId());
+			dto.setEmpName(req.getEmployee().getEmpName());
+			Optional<EmployeeEducationalDetails> eduDetails=req.getEmployee().getEducationDetails().stream().max((e1,e2)->e1.getYearOfPassing().compareTo(e2.getYearOfPassing()));
+			dto.setYearOfPassing(eduDetails.get().getYearOfPassing());
+			dto.setPercentage(eduDetails.get().getPercentage());
+			Integer expYear=req.getEmployee().getExperiences().stream()
+					.mapToInt(exp->exp.getYearsOfExperience().getYearsOfExperience()).sum();
+			YearsOfExperience yoe=YearsOfExperience.fromInt(expYear);
+			dto.setYearsOfExperience(yoe);
+			Contact contact=req.getEmployee().getContacts().get(0);
+			dto.setContactNumber(contact.getContactNumber());
+			return dto;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public String acceptRequest(String employeeId) {
+		Optional<RequestData> employee = requestDataRepository.findById(employeeId);
+		requestDataRepository.delete(employee.get());
+		return employee.get().getEmployee().getEmpId()+" ACCEPTED SUCCESSFULLY...";
+	}
+
+}

@@ -1,0 +1,103 @@
+package com.te.lmsp.controller;
+
+import java.sql.Timestamp;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.MentorDTO;
+import com.te.lmsp.exception.BatchNotFoundException;
+import com.te.lmsp.response.SuccessResponse;
+import com.te.lmsp.service.AdminService;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@RequestMapping(path = "/admin")
+@RestController
+public class AdminController {
+	Logger log = LoggerFactory.getLogger(AdminController.class);
+	private final AdminService adminService;
+
+	@GetMapping(path = "/batchlist")
+	public ResponseEntity<SuccessResponse> getBatchList() {
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder().data(adminService.getBatchList())
+				.message("NO OF RECORDS FOUND IS : " + adminService.getBatchList().size())
+				.timeStamp(new Timestamp(System.currentTimeMillis())).build(), HttpStatus.FOUND);
+	}
+
+	@PostMapping(path = "/register")
+	public ResponseEntity<SuccessResponse> registerBatch(@RequestBody BatchDTO batchDTO) {
+		String batchId = adminService.registerBatch(batchDTO);
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder().data(batchId).message("SUCCESS")
+				.timeStamp(new Timestamp(System.currentTimeMillis())).build(), HttpStatus.ACCEPTED);
+	}
+
+	@GetMapping(path = "/requestlist")
+	public ResponseEntity<SuccessResponse> showRequestList() {
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder()
+				.message("NO OF RECORDS FOUND IS : " + adminService.getRequestList().size())
+				.data(adminService.getRequestList()).timeStamp(new Timestamp(System.currentTimeMillis())).build(),
+				HttpStatus.FOUND);
+	}
+
+	@GetMapping(path = "/mentorlist")
+	public ResponseEntity<SuccessResponse> mentorList() {
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder()
+				.message("NO OF RECORDS FOUND IS : " + adminService.getMentorsList().size())
+				.data(adminService.getMentorsList()).timeStamp(new Timestamp(System.currentTimeMillis())).build(),
+				HttpStatus.FOUND);
+	}
+
+	@PostMapping(path = "registermentor")
+	public ResponseEntity<SuccessResponse> registerMentor(@RequestBody MentorDTO mentorDTO) {
+		String mentorId = adminService.registerMentor(mentorDTO);
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder().data(mentorId)
+				.message("REGISTERED SUCCESSFULLY").timeStamp(new Timestamp(System.currentTimeMillis())).build(),
+				HttpStatus.ACCEPTED);
+
+	}
+
+	@PutMapping(path = "/status")
+	public ResponseEntity<SuccessResponse> changeStatus(@RequestParam("id") String batchId,
+			@RequestBody BatchDTO batchDTO) throws BatchNotFoundException {
+		String batchI = adminService.updateBatchStatus(batchId, batchDTO);
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder().data(batchI)
+				.message("UPDATED SUCCESSFULLY").timeStamp(new Timestamp(System.currentTimeMillis())).build(),
+				HttpStatus.OK);
+
+	}
+
+	@DeleteMapping(path = "/accept")
+	public ResponseEntity<SuccessResponse> accept(@RequestParam("id") String employeeId,@RequestParam("name") String batchName,@RequestParam("batchid") String batchId) {
+		String msg = adminService.acceptRequest(employeeId,batchName,batchId);
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder().data(msg).message("ACCEPTED")
+				.timeStamp(new Timestamp(System.currentTimeMillis())).build(), HttpStatus.ACCEPTED);
+	}
+
+	@PutMapping(path = "/reject")
+	public ResponseEntity<SuccessResponse> reject(@RequestParam("id") String employeeId, @RequestBody String reason) {
+		String msg = adminService.rejectEmployee(employeeId, reason);
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder().data(msg).message("REJECTED")
+				.timeStamp(new Timestamp(System.currentTimeMillis())).build(), HttpStatus.EXPECTATION_FAILED);
+	}
+
+	public ResponseEntity<SuccessResponse> deleteBatch(@PathVariable String batchId) {
+		String msg = adminService.removeBatch(batchId);
+		return new ResponseEntity<SuccessResponse>(SuccessResponse.builder().data(msg).message("DELETED")
+				.timeStamp(new Timestamp(System.currentTimeMillis())).build(), HttpStatus.GONE);
+	}
+
+}

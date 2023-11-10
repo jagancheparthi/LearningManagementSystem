@@ -1,0 +1,35 @@
+package com.te.lmsp.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.te.lmsp.entity.Employee;
+
+public class MentorController {
+	@GetMapping(path = "/batch")
+	public void getBatchDetails() {
+		
+	}
+	@GetMapping(path = "/employees")
+	public List<Employee> getEmployees(int batchId) {
+		return List.of();
+	}
+	@GetMapping(path = "/mock")
+	public void getMockRatings(int empId) {
+		
+	}
+	@PostMapping(path = "addmock")
+	public void addMock() {
+		
+	}
+	@PostMapping(path = "addrating")
+	public void addRating() {
+		
+	}
+	@PostMapping(path = "addattendence")
+	public void addAttendence() {
+		
+	}
+}

@@ -1,0 +1,60 @@
+package com.te.lmsp.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.MentorDTO;
+import com.te.lmsp.entity.Batch;
+import com.te.lmsp.exception.BatchNotFoundException;
+import com.te.lmsp.service.AdminService;
+
+import lombok.RequiredArgsConstructor;
+@RequiredArgsConstructor
+@RequestMapping(path = "/admin")
+@RestController
+public class AdminController {
+	Logger log=LoggerFactory.getLogger(AdminController.class);
+	private final AdminService adminService;
+	
+	@GetMapping(path = "/batchlist")
+	public List<BatchDTO> getBatchList() {
+		List<BatchDTO> batches=adminService.getBatchList();
+		return batches;
+	}
+	
+	@PostMapping(path = "/register")
+	public String registerBatch(@RequestBody BatchDTO batchDTO) {
+		log.info("register is started");
+		String batchId=adminService.registerBatch(batchDTO);
+		log.info("register completed");
+		return batchId;
+	}
+	
+	@GetMapping(path = "/requestlist")
+	public void showRequestList() {
+		
+	}
+	@GetMapping(path = "/mentorlist")
+	public void mentorList() {
+		
+	}
+	@PostMapping(path = "registermentor")
+	public String registerMentor(@RequestBody MentorDTO mentorDTO) {
+		String mentorId=adminService.registerMentor(mentorDTO);
+		return mentorId+"--INSERTED SUCCESSFULLY";
+	}
+	@PutMapping(path = "/status")
+	public void changeStatus(@RequestParam("id") String batchId,@RequestBody BatchDTO batchDTO) throws BatchNotFoundException {
+		String batchI=adminService.updateBatchStatus(batchId,batchDTO);
+	}
+}

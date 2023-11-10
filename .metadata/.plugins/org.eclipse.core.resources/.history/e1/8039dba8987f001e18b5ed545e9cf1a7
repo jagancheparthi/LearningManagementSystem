@@ -1,0 +1,18 @@
+package com.te.lmsp.seviceimpltest;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.te.lmsp.service.implementation.EmployeeServiceImpl;
+
+import lombok.RequiredArgsConstructor;
+@RequiredArgsConstructor
+@SpringBootTest
+public class EmployeeServiceImplTest {
+	private final EmployeeServiceImpl employeeServiceImpl;
+	
+	@Test
+	public void saveEmployeeTest() {
+//		employeeServiceImpl.saveEmployee(null);
+	}
+}

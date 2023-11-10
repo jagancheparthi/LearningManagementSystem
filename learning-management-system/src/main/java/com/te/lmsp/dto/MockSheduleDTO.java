@@ -1,0 +1,28 @@
+package com.te.lmsp.dto;
+
+import java.time.LocalDateTime;
+
+import com.te.lmsp.enums.MockNo;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
+public class MockSheduleDTO {
+	private String batchId;
+	@Enumerated(EnumType.STRING)
+	private MockNo mockNo;
+	private String technology;
+	private String panel;
+	private LocalDateTime time;
+}

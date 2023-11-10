@@ -1,0 +1,41 @@
+package com.te.lmsp.entity;
+
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString
+@Entity
+public class EmployeeAttendence {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "attendence_id")
+	private Integer attendenceId;
+
+	@NotNull(message = "Attendence date should not be null")
+	@Column(name = "attendence_date")
+	private LocalDate attendenceDate;
+
+//	@NotNull(message = "Morning Attendence should not be null")
+	@Column(name = "attendence_morning")
+	private Boolean attendenceMorning;
+
+//	@NotNull(message = "After noon Attendence should not be null")
+	@Column(name = "attendence_noon")
+	private Boolean attendenceNoon;
+}

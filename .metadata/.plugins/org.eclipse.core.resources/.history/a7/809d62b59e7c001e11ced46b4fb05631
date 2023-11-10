@@ -1,0 +1,88 @@
+package com.te.lmsp.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
+
+@EnableWebSecurity
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig {
+	private final JwtAuthenticationFilter filter;
+
+	@SuppressWarnings("deprecation")
+	@Bean
+	public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {    
+//		http.authorizeHttpRequests(request->request.requestMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html")
+//				.permitAll()
+//		        .anyRequest().authenticated());
+//		
+//		http.csrf(csrf -> {
+//				csrf.disable();
+//		});
+//		
+//		
+//		http.authorizeHttpRequests(request -> request.requestMatchers("/employee/requests")
+//				.hasRole("EMPLOYEE"));
+//		http.authorizeHttpRequests(request -> request.requestMatchers("/employee/updatepassword")
+//				.hasAnyRole("EMPLOYEE","ADMIN","MENTOR"));
+//		http.authorizeHttpRequests(request -> request.requestMatchers("/employee/**").hasAnyRole("ADMIN"));
+//		
+//		http.authorizeHttpRequests(
+//				request -> request.requestMatchers(HttpMethod.POST, "/auth/updatepassword").permitAll());
+//		
+//		http.authorizeHttpRequests(request -> request.requestMatchers("/admin/**").permitAll());
+//		http.authorizeHttpRequests(request -> request.requestMatchers("/mentor/**").permitAll());
+//		http.authorizeHttpRequests(
+//				requests -> requests.requestMatchers("/auth/**").permitAll().anyRequest().authenticated());
+//		
+//
+//		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//		http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+		
+			http
+			.authorizeRequests(requests -> requests
+	        .requestMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html").permitAll());
+	        http
+		    .authorizeRequests(requests -> requests
+	        .requestMatchers("/employee/requests").hasRole("EMPLOYEE"));
+	        http
+		    .authorizeRequests(requests -> requests
+	        .requestMatchers("/employee/updatepassword").hasAnyRole("EMPLOYEE", "ADMIN", "MENTOR"));
+	        http
+		    .authorizeRequests(requests -> requests
+	        .requestMatchers("/employee/**").hasAnyRole("ADMIN"));
+	        http
+		    .authorizeRequests(requests -> requests
+	        .requestMatchers(HttpMethod.POST, "/auth/updatepassword").permitAll());
+	        http
+		    .authorizeRequests(requests -> requests
+	        .requestMatchers("/admin/**").permitAll());
+	        http
+		    .authorizeRequests(requests -> requests
+	        .requestMatchers("/mentor/**").permitAll());
+	        http
+		    .authorizeRequests(requests -> requests
+	        .requestMatchers("/auth/**").permitAll()
+	        .anyRequest().authenticated()
+	    )
+	    .csrf(csrf -> csrf.disable())
+	    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	    .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+		
+		return http.build();
+	}
+	
+	
+//	 http.csrf().disable()
+//     .authorizeRequests()
+//     .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html").permitAll()
+//     .anyRequest().authenticated();
+}

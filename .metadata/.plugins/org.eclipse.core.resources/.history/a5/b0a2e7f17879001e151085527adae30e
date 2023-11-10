@@ -1,0 +1,83 @@
+package com.te.lmsp.service.implementation;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.MentorDTO;
+import com.te.lmsp.dto.SkillDTO;
+import com.te.lmsp.entity.Batch;
+import com.te.lmsp.entity.Mentor;
+import com.te.lmsp.entity.Skill;
+import com.te.lmsp.repository.BatchRepository;
+import com.te.lmsp.repository.MentorRepository;
+import com.te.lmsp.repository.SkillRepository;
+import com.te.lmsp.service.AdminService;
+import com.te.lmsp.util.BatchUtils;
+import com.te.lmsp.util.MentorUtils;
+
+import lombok.RequiredArgsConstructor;
+@RequiredArgsConstructor
+@Service
+public class AdminServiceImpl implements AdminService{
+
+	private final MentorUtils mentorUtils;
+	private final BatchRepository batchRepository;
+	private final MentorRepository mentorRepository;
+	private final SkillRepository skillRepository;
+	private final BatchUtils batchUtils;
+	
+	@Override
+	public String registerMentor(MentorDTO mentorDTO) {
+		Mentor mentor = mentorUtils.dtoToMentor(mentorDTO);
+		Set<Skill> skills = mentorDTO.getSkills().stream().map(sk->batchUtils.dtoToSkill(sk)).collect(Collectors.toSet());
+		Set<Skill> set=new HashSet<>();
+		for (Skill skill : skills) {
+			Skill skil = skillRepository.findBySkillName(skill.getSkillName());
+			if(skil!=null) set.add(skil);
+			else set.add(skill);
+		}
+		mentor.setSkills(set);
+		Mentor men = mentorRepository.save(mentor);
+		return men.getMentorId();
+	}
+	
+	@Override
+	public String registerBatch(BatchDTO batchDTO) {
+		System.out.println(batchDTO);
+		Batch batch=new Batch();
+		BeanUtils.copyProperties(batchDTO, batch);
+		Set<Skill> set=new HashSet<>();
+		Set<Skill> skills=batchDTO.getTechnologies().stream().map(sk->batchUtils.dtoToSkill(sk)).collect(Collectors.toSet());
+			for (Skill skill : skills) {
+				System.out.println(skill.getSkillName());
+				Skill skil = skillRepository.findById(skill.getSkillName()).orElse(null);
+				set.add(skil);
+				}
+		Mentor ment = mentorRepository.findByMentorName(batchDTO.getMentorName());
+		batch.setMentor(ment);		
+		batch.setTechnologies(set);
+		Batch batchS = batchRepository.save(batch);
+		return batchS.getBatchId()+" is Saved Successfully....";
+	}
+
+	@Override
+	public List<BatchDTO> getBatchList() {
+		List<Batch> batches = batchRepository.findAll();
+		return batches.stream().map(batch->{
+			BatchDTO dto=new BatchDTO();
+			BeanUtils.copyProperties(batch, dto);
+			dto.setMentorName(batch.getMentor().getMentorName());
+			Set<SkillDTO> skills = batch.getTechnologies().stream().map(tech->batchUtils.skillToDto(tech)).collect(Collectors.toSet());
+			dto.setTechnologies(skills);
+			return dto;
+		}).collect(Collectors.toList());
+	}
+	
+
+}

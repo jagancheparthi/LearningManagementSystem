@@ -1,0 +1,9 @@
+package com.te.lmsp.exception;
+
+@SuppressWarnings("serial")
+public class BatchNotFoundException extends Exception{
+	private String msg;
+	BatchNotFoundException(String msg){
+		super(msg);
+	}
+}

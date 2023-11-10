@@ -1,0 +1,17 @@
+package com.te.lmsp.service;
+
+import java.util.List;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.BatchMentorDTO;
+import com.te.lmsp.dto.EmployeeDTO;
+
+public interface MentorService {
+
+	BatchMentorDTO getBatchDetails(String batchId);
+
+	List<BatchDTO> getBatchList();
+
+	List<EmployeeDTO> getEmployees(String batchId);
+
+}

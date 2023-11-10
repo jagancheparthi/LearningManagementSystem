@@ -1,0 +1,17 @@
+package com.te.lmsp.util;
+
+import com.te.lmsp.dto.SkillDTO;
+import com.te.lmsp.entity.Skill;
+
+public class BatchUtils {
+	public Skill dtoToSkill(SkillDTO skillDTO) {
+		return Skill.builder()
+				.skillName(skillDTO.getSkillName())
+				.build();
+	}
+	public SkillDTO skillToDto(Skill skill) {
+		return SkillDTO.builder()
+				.skillName(skill.getSkillName())
+				.build();
+	}
+}

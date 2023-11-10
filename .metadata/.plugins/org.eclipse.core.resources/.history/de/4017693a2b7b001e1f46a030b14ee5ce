@@ -1,0 +1,9 @@
+package com.te.lmsp.service;
+
+import com.te.lmsp.dto.BatchMentorDTO;
+
+public interface MentorService {
+
+	BatchMentorDTO getBatchDetails(String batchId);
+
+}

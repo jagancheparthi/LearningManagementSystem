@@ -1,0 +1,5 @@
+package com.te.lmsp.exception;
+
+public class MockReportDuplicateException extends Exception {
+
+}

@@ -1,0 +1,28 @@
+package com.te.lmsp.service;
+
+import java.util.List;
+
+import com.te.lmsp.dto.BatchDTO;
+import com.te.lmsp.dto.MentorDTO;
+import com.te.lmsp.dto.RequestDataDTO;
+import com.te.lmsp.exception.BatchNotFoundException;
+
+public interface AdminService {
+
+	String registerBatch(BatchDTO batchDTO);
+
+	String registerMentor(MentorDTO mentorDTO);
+
+	List<BatchDTO> getBatchList();
+
+	String updateBatchStatus(String batchId, BatchDTO batchDTO) throws BatchNotFoundException;
+
+	List<MentorDTO> getMentorsList();
+
+	List<RequestDataDTO> getRequestList();
+
+	String acceptRequest(String employeeId);
+
+	String rejectEmployee(String employeeId,String msg);
+
+}

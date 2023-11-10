@@ -1,0 +1,27 @@
+package com.te.lmsp.dto;
+
+import java.util.Map;
+
+import com.te.lmsp.enums.Degree;
+import com.te.lmsp.enums.Gender;
+import com.te.lmsp.enums.YearsOfExperience;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString
+public class BatchMentorDTO {
+	private Map<Gender, Integer> gender;
+	private Map<Integer, Integer> yearOfPass;
+	private Map<YearsOfExperience, Integer> experience;
+	private Map<Degree, Integer> degree;
+	private Map<String, Integer> performance;
+}

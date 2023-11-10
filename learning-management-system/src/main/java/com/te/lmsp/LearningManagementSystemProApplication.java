@@ -1,0 +1,42 @@
+package com.te.lmsp;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.te.lmsp.entity.AppUser;
+import com.te.lmsp.repository.AppUserRepository;
+
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@SpringBootApplication
+public class LearningManagementSystemProApplication {
+
+	private final AppUserRepository appUserRepository;
+	private final PasswordEncoder encoder;
+
+	public static void main(String[] args) {
+		SpringApplication.run(LearningManagementSystemProApplication.class, args);
+	}
+
+	@Bean
+	public CommandLineRunner getCommandLineRunner() {
+		return new CommandLineRunner() {
+
+			@Override
+			public void run(String... args) throws Exception {
+				AppUser appUser = new AppUser();
+				appUser.setUsername("ADMIN01");
+				appUser.setPassword(encoder.encode("ADMIN01"));
+				appUser.setRole("ROLE_ADMIN");
+				appUserRepository.save(appUser);
+			}
+		};
+	}
+}

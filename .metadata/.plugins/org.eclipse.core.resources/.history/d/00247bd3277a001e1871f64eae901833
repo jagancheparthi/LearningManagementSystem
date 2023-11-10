@@ -1,0 +1,55 @@
+package com.te.lmsp.controller;
+
+import java.sql.Timestamp;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.te.lmsp.dto.AppUserDTO;
+import com.te.lmsp.dto.EmployeeDTO;
+import com.te.lmsp.dto.UpdatePasswordDTO;
+import com.te.lmsp.exception.RegistrationErrorException;
+import com.te.lmsp.exception.UserNotFoundException;
+import com.te.lmsp.response.SuccessResponse;
+import com.te.lmsp.security.JwtUtils;
+import com.te.lmsp.service.EmployeeService;
+
+import lombok.RequiredArgsConstructor;
+@RequestMapping(path = "/auth")
+@RequiredArgsConstructor
+@RestController
+public class AppUserController {
+	private final EmployeeService employeeService;
+	private final AuthenticationManager authenticationManager;
+	private final JwtUtils jwtUtils;
+
+	@PostMapping(path = "/register")
+	public ResponseEntity<SuccessResponse> saveEmployee(@RequestBody EmployeeDTO employeeDTO)
+			throws RegistrationErrorException {
+		return new ResponseEntity<SuccessResponse>(
+				SuccessResponse.builder().data(employeeService.saveEmployee(employeeDTO))
+						.timeStamp(new Timestamp(System.currentTimeMillis())).build(),
+				HttpStatus.ACCEPTED);
+	}
+	@PostMapping(path = "/login")
+	public String logIn(@RequestBody AppUserDTO appUserDto) {
+		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+				appUserDto.getUsername(), appUserDto.getPassword());
+		authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+		return jwtUtils.generateToken(appUserDto.getUsername());
+
+	}
+	@PostMapping(path = "/updatepassword")
+	public String updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDto) throws UserNotFoundException {
+		System.out.println("Controller "+updatePasswordDto);
+		String empId=employeeService.updatePassword(updatePasswordDto);
+		return empId;
+	}
+}
